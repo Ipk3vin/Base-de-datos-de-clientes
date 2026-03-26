@@ -17,9 +17,19 @@ function procesarDatos(e) {
   var numeroCliente = e.parameter.numeroCliente || "Vacío";
   var correo = e.parameter.correo || "Vacío";
   var contrasena = e.parameter.contrasena || "Vacío";
+  var tipoUsuario = e.parameter.tipoUsuario || "";
 
-  // Escribimos los datos en la primera fila vacía disponible, comenzando desde la columna A
-  sheet.appendRow([numeroCliente, correo, contrasena]);
+  // Guardaremos la fecha oficial como objeto de fecha nativo de Google Sheets
+  var fechaIngreso = new Date();
+
+  // Orden exacto sin la fórmula aún: A(número), B(correo), C(contraseña), D(tipoUsuario), E(fecha)
+  sheet.appendRow([numeroCliente, correo, contrasena, tipoUsuario, fechaIngreso]);
+
+  // Inyectamos la fórmula especial de R1C1 en la columna F (la 6)
+  // Al usar setFormulaR1C1, Google lo traducirá solo a tu idioma (Español) evitando el #ERROR!
+  var ultimaFila = sheet.getLastRow();
+  var formulaExcel = '=IF(ISBLANK(RC[-1]), "", MAX(0, 30 + (TODAY() - INT(RC[-1]))) & " días restantes")';
+  sheet.getRange(ultimaFila, 6).setFormulaR1C1(formulaExcel);
 
   // Permitir respuesta para evitar errores CORS al final del proceso
   return ContentService.createTextOutput("Éxito").setMimeType(ContentService.MimeType.TEXT);

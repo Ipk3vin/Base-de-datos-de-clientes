@@ -5,7 +5,7 @@ const loader = document.querySelector('.loader');
 const statusMessage = document.getElementById('statusMessage');
 
 // ¡IMPORTANTE! Reemplaza esta URL con la que te dé Google Apps Script al implementar el código.
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzgRACzHXFucgCVTOpJip8K4ZY3Or7-8axyLDU6wgUpjtBvpdtF90g8018zP0FaRyesbQ/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyc8yS4FgitNbhFpvhgu2QOF3QW2F4jw_qbCvm6tSQErCnOTK9pm5kgQzeCFLIFFZmRKw/exec';
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -20,7 +20,16 @@ form.addEventListener('submit', async (e) => {
     // Obtenemos los valores
     let numeroCliente = document.getElementById('numeroCliente').value;
     let correo = document.getElementById('correo').value;
-    let contrasena = document.getElementById('contrasena').value;
+    const contrasena = document.getElementById('contrasena').value;
+
+    const radiosDom = document.getElementsByName('tipoUsuario');
+    let tipoUsuario = "";
+    for (let i = 0; i < radiosDom.length; i++) {
+        if (radiosDom[i].checked) {
+            tipoUsuario = radiosDom[i].value;
+            break;
+        }
+    }
 
     // Función mágica para evitar que Google Sheets crea que un número tipo "+51" es una suma matemática
     const protegerDeGoogleSheets = (texto) => {
@@ -34,7 +43,8 @@ form.addEventListener('submit', async (e) => {
     const params = new URLSearchParams({
         numeroCliente: protegerDeGoogleSheets(numeroCliente),
         correo: protegerDeGoogleSheets(correo),
-        contrasena: protegerDeGoogleSheets(contrasena)
+        contrasena: protegerDeGoogleSheets(contrasena),
+        tipoUsuario: tipoUsuario
     });
 
     try {
