@@ -18,14 +18,23 @@ form.addEventListener('submit', async (e) => {
     setLoading(true);
 
     // Obtenemos los valores
-    const numeroCliente = document.getElementById('numeroCliente').value;
-    const correo = document.getElementById('correo').value;
-    const contrasena = document.getElementById('contrasena').value;
+    let numeroCliente = document.getElementById('numeroCliente').value;
+    let correo = document.getElementById('correo').value;
+    let contrasena = document.getElementById('contrasena').value;
+
+    // Función mágica para evitar que Google Sheets crea que un número tipo "+51" es una suma matemática
+    const protegerDeGoogleSheets = (texto) => {
+        // Si el texto empieza con signos matemáticos, le pegamos una comilla simple oculta
+        if (texto.startsWith('+') || texto.startsWith('=') || texto.startsWith('-') || texto.startsWith('@')) {
+            return "'" + texto;
+        }
+        return texto;
+    };
 
     const params = new URLSearchParams({
-        numeroCliente: numeroCliente,
-        correo: correo,
-        contrasena: contrasena
+        numeroCliente: protegerDeGoogleSheets(numeroCliente),
+        correo: protegerDeGoogleSheets(correo),
+        contrasena: protegerDeGoogleSheets(contrasena)
     });
 
     try {
