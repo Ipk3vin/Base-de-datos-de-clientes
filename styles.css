@@ -10,13 +10,12 @@ body {
     min-height: 100vh;
     display: flex;
     justify-content: center;
-    align-items: center;
     color: #ffffff;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .background {
-    position: absolute;
+    position: fixed;
     width: 100vw;
     height: 100vh;
     z-index: -1;
@@ -61,6 +60,7 @@ body {
     padding: 2rem;
     width: 100%;
     max-width: 480px;
+    margin: auto;
 }
 
 .glass-form-container {
