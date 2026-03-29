@@ -161,6 +161,42 @@ button:disabled {
     transform: none;
 }
 
+/* Radio Buttons Style */
+.radio-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.8rem 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #808080;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.radio-group input[type="radio"]:checked + .radio-btn {
+    background: rgba(88, 101, 242, 0.2);
+    border-color: rgba(88, 101, 242, 0.8);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(88, 101, 242, 0.3);
+}
+
+.radio-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
 /* Loader Styles */
 .loader {
     width: 20px;

@@ -21,6 +21,7 @@ form.addEventListener('submit', async (e) => {
     let numeroCliente = document.getElementById('numeroCliente').value;
     let correo = document.getElementById('correo').value;
     const contrasena = document.getElementById('contrasena').value;
+    const tipoCuenta = document.getElementById('tipoCuenta').value;
 
     const radiosDom = document.getElementsByName('tipoUsuario');
     let tipoUsuario = "";
@@ -44,7 +45,8 @@ form.addEventListener('submit', async (e) => {
         numeroCliente: protegerDeGoogleSheets(numeroCliente),
         correo: protegerDeGoogleSheets(correo),
         contrasena: protegerDeGoogleSheets(contrasena),
-        tipoUsuario: tipoUsuario
+        tipoUsuario: tipoUsuario,
+        tipoCuenta: protegerDeGoogleSheets(tipoCuenta)
     });
 
     try {
@@ -58,6 +60,31 @@ form.addEventListener('submit', async (e) => {
 
         // Al usar no-cors, no podemos leer la respuesta exacta, pero si llega aquí sabemos que la petición se envió.
         showStatus('success', '¡Datos guardados correctamente en Google Sheets!');
+        
+        // Preparar y enviar mensaje de WhatsApp
+        const fechaActual = new Date().toLocaleDateString('es-ES');
+        
+        // Usamos Texto Codificado en URL (URL Encoded) 100% en formato americano para evitar 
+        // totalmente todos los "rombos" o errores por la codificación de Windows en el archivo.
+        const textParam = 
+            "%F0%9F%91%8B%20*%C2%A1Hola!%20Aqu%C3%AD%20tienes%20los%20detalles%20de%20tu%20nueva%20cuenta:*%0A%0A" +
+            "%E2%AD%90%20*Usuario%20(Correo):*%20" + encodeURIComponent(correo || 'No especificado') + "%0A" +
+            "%F0%9F%94%92%20*Contrase%C3%B1a:*%20" + encodeURIComponent(contrasena) + "%0A" +
+            "%E2%9C%85%20*Tipo%20de%20Usuario:*%20" + encodeURIComponent(tipoUsuario || 'No especificado') + "%0A" +
+            "%F0%9F%93%BA%20*Tipo%20de%20Cuenta:*%20" + encodeURIComponent(tipoCuenta || 'No especificado') + "%0A" +
+            "%F0%9F%93%85%20*Fecha%20de%20compra:*%20" + encodeURIComponent(fechaActual) + "%0A" +
+            "%E2%8F%B3%20*D%C3%ADas%20restantes:*%2030%0A%0A" +
+            "_%C2%A1Gracias%20por%20tu%20preferencia!_%20%E2%9C%A8";
+                        
+        // Limpiamos el número de símbolos (+, espacios) para pasarlo a la api de WhatsApp
+        const telefonoLimpio = numeroCliente.replace(/[^0-9]/g, '');
+        
+        // Usamos el protocolo nativo (whatsapp://) para abrir la app instalada directamente sin la ventana web intermedia
+        const whatsappUrl = `whatsapp://send?phone=${telefonoLimpio}&text=${textParam}`;
+        
+        // Usar window.location.href en vez de window.open abre la app sin generar pestañas en blanco basura
+        window.location.href = whatsappUrl;
+
         form.reset();
 
     } catch (error) {
