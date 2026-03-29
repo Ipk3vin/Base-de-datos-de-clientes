@@ -39,9 +39,10 @@ function procesarDatos(e) {
 // ======================================================================
 // 🤖 SISTEMA DE NOTIFICACIONES IA (TELEGRAM)
 // ======================================================================
-// RELLENA ESTOS DOS DATOS CON LA INFO DE TU BOT (Lo haremos en el tutorial)
-const TELEGRAM_TOKEN = "8732067425:AAH2jdLjSi3Xo3PoOlZvnTMHhmqdSfPEvNE";
-const MI_CHAT_ID = "5908833176";
+// Las credenciales se leen desde las "Propiedades del Script" de Google (Project Settings)
+// Así el código es seguro para subir a GitHub sin exponer tokens.
+const TELEGRAM_TOKEN = PropertiesService.getScriptProperties().getProperty('TELEGRAM_TOKEN');
+const MI_CHAT_ID = PropertiesService.getScriptProperties().getProperty('MI_CHAT_ID');
 
 // Esta función es la que el "Activador" de Google ejecutará 1 vez al día de forma automática
 function revisarVencimientosDiarios() {
